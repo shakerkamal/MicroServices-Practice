@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data;
 using PlatformService.SyncDataServices.Http;
 
@@ -17,8 +18,12 @@ else
     builder.Services.AddDbContext<AppDbContext>(opt => 
         opt.UseInMemoryDatabase("InMem"));
 }
+
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
 builder.Services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
+// Add RabbitMQ message client
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
